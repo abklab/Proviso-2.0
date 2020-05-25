@@ -1,0 +1,113 @@
+﻿USE ProvisoDB
+GO
+
+/****** Object:  Table [dbo].[Bank_Loan_Repayment]    Script Date: 11/6/2019 1:54:47 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Bank_Loan_Repayment](
+	[EntryID] [int] IDENTITY(1,1) NOT NULL,
+	[RefNo] [varchar](50) NOT NULL,
+	[B_AccountNumber] [varchar](50) NULL,
+	[MNO] [varchar](50) NULL,
+	[Amount] [decimal](18, 0) NOT NULL,
+	[LastUpdated] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Momo_Loan_Repayment]    Script Date: 11/6/2019 1:54:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Momo_Loan_Repayment](
+	[EntryID] [int] IDENTITY(1,1) NOT NULL,
+	[RefNo] [varchar](50) NOT NULL,
+	[MomoNumber] [varchar](50) NULL,
+	[MNO] [varchar](50) NULL,
+	[Amount] [decimal](18, 0) NOT NULL,
+	[LastUpdated] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  StoredProcedure [dbo].[usp_Bank_LoanRepayment]    Script Date: 11/6/2019 1:54:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+create proc [dbo].[usp_Bank_LoanRepayment]
+		   @RefNo  VARCHAR(50)
+		  ,@B_AccountNumber VARCHAR(50)=''
+		  
+		  ,@Amount decimal(18,2)
+	 
+as
+INSERT INTO Bank_Loan_Repayment
+		( [RefNo]
+		  ,[B_AccountNumber]
+		 
+		  ,[Amount]		 
+		  ,[LastUpdated])
+VALUES			
+		( @RefNo
+		  ,@B_AccountNumber
+		  
+		  ,@Amount
+		  ,GETDATE() );
+GO
+/****** Object:  StoredProcedure [dbo].[usp_Get_Bank_Transaction_RefNo]    Script Date: 11/6/2019 1:54:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Script for SelectTopNRows command from SSMS  ******/
+create proc [dbo].[usp_Get_Bank_Transaction_RefNo] 
+@refNo varchar(50)
+as
+SELECT * FROM [dbo].Bank_Loan_Repayment
+where RefNo=@refNo
+
+		
+GO
+/****** Object:  StoredProcedure [dbo].[usp_Get_Momo_Transaction_RefNo]    Script Date: 11/6/2019 1:54:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Script for SelectTopNRows command from SSMS  ******/
+create proc [dbo].[usp_Get_Momo_Transaction_RefNo] 
+@refNo varchar(50)
+as
+SELECT * FROM [dbo].Momo_Loan_Repayment
+where RefNo=@refNo
+
+		
+GO
+/****** Object:  StoredProcedure [dbo].[usp_Momo_LoanRepayment]    Script Date: 11/6/2019 1:54:48 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+		  create proc [dbo].[usp_Momo_LoanRepayment]
+		   @RefNo  VARCHAR(50)
+		 
+		  ,@MomoNumber VARCHAR(50)=''
+		  ,@MNO VARCHAR(50)
+		  ,@Amount decimal(18,2)
+	 
+as
+INSERT INTO Momo_Loan_Repayment
+		( [RefNo]
+		 
+		  ,[MomoNumber]
+		  ,[MNO]
+		  ,[Amount]		 
+		  ,[LastUpdated])
+VALUES			
+		( @RefNo
+		  
+		  ,@MomoNumber
+		  ,@MNO
+		  ,@Amount
+		  ,GETDATE() )
+GO
